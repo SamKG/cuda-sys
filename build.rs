@@ -104,7 +104,6 @@ fn main() {
         // bindings for.
         .header("cuda-driver.h")
         .clang_arg(format!("-I{}", cuda_root.join("include").display()))
-        // .opaque_type("dcgm_link.*") // special case for dcgm_link; for some reason bindgen doesn't like it
         .wrap_static_fns(true)
         .clang_macro_fallback()
         .derive_default(true)
@@ -130,7 +129,6 @@ fn main() {
         // bindings for.
         .header("cuda-runtime.h")
         .clang_arg(format!("-I{}", cuda_root.join("include").display()))
-        // .opaque_type("dcgm_link.*") // special case for dcgm_link; for some reason bindgen doesn't like it
         .wrap_static_fns(true)
         .clang_macro_fallback()
         .derive_default(true)
@@ -146,5 +144,29 @@ fn main() {
     let out_path = PathBuf::from(env::var("OUT_DIR").unwrap());
     bindings
         .write_to_file(out_path.join("cuda-runtime.rs"))
+        .expect("Couldn't write bindings!");
+
+    let bindings = bindgen::Builder::default()
+        // The input header we would like to generate
+        // bindings for.
+        .header("compute-sanitizer.h")
+        .clang_arg(format!("-I{}", cuda_root.join("include").display()))
+        .clang_arg(format!("-I{}", cuda_root.join("compute-sanitizer").join("include").display()))
+        .clang_arg(format!("-L{}", cuda_root.join("compute-sanitizer").display()))
+        .wrap_static_fns(true)
+        .clang_macro_fallback()
+        .derive_default(true)
+        // Tell cargo to invalidate the built crate whenever any of the
+        // included header files changed.
+        .parse_callbacks(Box::new(bindgen::CargoCallbacks::new()))
+        // Finish the builder and generate the bindings.
+        .generate()
+        // Unwrap the Result and panic on failure.
+        .expect("Unable to generate bindings");
+
+    // Write the bindings to the $OUT_DIR/bindings.rs file.
+    let out_path = PathBuf::from(env::var("OUT_DIR").unwrap());
+    bindings
+        .write_to_file(out_path.join("compute-sanitizer.rs"))
         .expect("Couldn't write bindings!");
 }
