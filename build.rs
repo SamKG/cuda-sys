@@ -149,10 +149,9 @@ fn main() {
     let bindings = bindgen::Builder::default()
         // The input header we would like to generate
         // bindings for.
-        .header("compute-sanitizer.h")
+        .header("cuda-host_runtime.h")
         .clang_arg(format!("-I{}", cuda_root.join("include").display()))
-        .clang_arg(format!("-I{}", cuda_root.join("compute-sanitizer").join("include").display()))
-        .clang_arg(format!("-L{}", cuda_root.join("compute-sanitizer").display()))
+        .clang_arg(format!("-I{}", cuda_root.join("include/crt").display()))
         .wrap_static_fns(true)
         .clang_macro_fallback()
         .derive_default(true)
@@ -167,6 +166,6 @@ fn main() {
     // Write the bindings to the $OUT_DIR/bindings.rs file.
     let out_path = PathBuf::from(env::var("OUT_DIR").unwrap());
     bindings
-        .write_to_file(out_path.join("compute-sanitizer.rs"))
+        .write_to_file(out_path.join("cuda-host_runtime.rs"))
         .expect("Couldn't write bindings!");
 }

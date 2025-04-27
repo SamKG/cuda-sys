@@ -2,4 +2,4 @@
 #![allow(non_camel_case_types)]
 #![allow(non_snake_case)]
 
-include!(concat!(env!("OUT_DIR"), "/compute-sanitizer.rs"));
+include!(concat!(env!("OUT_DIR"), "/cuda-host_runtime.rs"));
