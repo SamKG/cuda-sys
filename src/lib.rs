@@ -1,3 +1,3 @@
 pub mod driver;
-pub mod host_runtime;
+pub mod nvfatbin;
 pub mod runtime;
