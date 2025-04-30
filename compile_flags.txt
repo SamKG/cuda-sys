@@ -1,0 +1,5 @@
+-I
+/usr/local/cuda/include
+-lboost_system
+-lboost_thread
+-pthread
